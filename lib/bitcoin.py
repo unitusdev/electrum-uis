@@ -74,11 +74,11 @@ class NetworkConstants:
     @classmethod
     def set_mainnet(cls):
         cls.TESTNET = False
-        cls.WIF_PREFIX = 0x80
-        cls.ADDRTYPE_P2PKH = 0
-        cls.ADDRTYPE_P2SH = 5
+        cls.WIF_PREFIX = 0x84
+        cls.ADDRTYPE_P2PKH = 68
+        cls.ADDRTYPE_P2SH = 10
         cls.SEGWIT_HRP = "bc"
-        cls.GENESIS = "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+        cls.GENESIS = "d8a2b2439d013a59f3bfc626a33487a3d7d27e42a3c9e0b81af814cd8e592f31"
         cls.DEFAULT_PORTS = {'t': '50001', 's': '50002'}
         cls.DEFAULT_SERVERS = read_json('servers.json', {})
         cls.CHECKPOINTS = read_json('checkpoints.json', [])
@@ -87,10 +87,10 @@ class NetworkConstants:
     def set_testnet(cls):
         cls.TESTNET = True
         cls.WIF_PREFIX = 0xef
-        cls.ADDRTYPE_P2PKH = 111
-        cls.ADDRTYPE_P2SH = 196
+        cls.ADDRTYPE_P2PKH = 130
+        cls.ADDRTYPE_P2SH = 192
         cls.SEGWIT_HRP = "tb"
-        cls.GENESIS = "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"
+        cls.GENESIS = "79b11e9472e5876fa6b6fac3efd46d63ee19e6f700d9048364e0b4ddeab0b58b"
         cls.DEFAULT_PORTS = {'t':'51001', 's':'51002'}
         cls.DEFAULT_SERVERS = read_json('servers_testnet.json', {})
         cls.CHECKPOINTS = read_json('checkpoints_testnet.json', [])
@@ -104,7 +104,7 @@ FEE_STEP = 10000
 MAX_FEE_RATE = 300000
 
 
-COINBASE_MATURITY = 100
+COINBASE_MATURITY = 180
 COIN = 100000000
 
 # supported types of transction outputs
@@ -512,10 +512,10 @@ def DecodeBase58Check(psz):
 # extended key export format for segwit
 
 SCRIPT_TYPES = {
-    'p2pkh':0,
+    'p2pkh':68,
     'p2wpkh':1,
     'p2wpkh-p2sh':2,
-    'p2sh':5,
+    'p2sh':10,
     'p2wsh':6,
     'p2wsh-p2sh':7
 }
@@ -585,7 +585,8 @@ def is_b58_address(addr):
     return addr == hash160_to_b58_address(h, addrtype)
 
 def is_address(addr):
-    return is_segwit_address(addr) or is_b58_address(addr)
+    ## return is_segwit_address(addr) or is_b58_address(addr)
+    return is_b58_address(addr)
 
 
 def is_private_key(key):
@@ -619,7 +620,7 @@ from ecdsa.util import string_to_number, number_to_string
 
 def msg_magic(message):
     length = bfh(var_int(len(message)))
-    return b"\x18Bitcoin Signed Message:\n" + length + message
+    return b"\x18Unitus Signed Message:\n" + length + message
 
 
 def verify_message(address, sig, message):

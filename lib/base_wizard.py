@@ -91,7 +91,7 @@ class BaseWizard(object):
             ('standard',  _("Standard wallet")),
             ('2fa', _("Wallet with two-factor authentication")),
             ('multisig',  _("Multi-signature wallet")),
-            ('imported',  _("Import Bitcoin addresses or private keys")),
+            ('imported',  _("Import Unitus addresses or private keys")),
         ]
         choices = [pair for pair in wallet_kinds if pair[0] in wallet_types]
         self.choice_dialog(title=title, message=message, choices=choices, run_next=self.on_wallet_type)
@@ -129,7 +129,8 @@ class BaseWizard(object):
         if self.wallet_type =='standard' or i==0:
             message = _('Do you want to create a new seed, or to restore a wallet using an existing seed?')
             choices = [
-                ('choose_seed_type', _('Create a new seed')),
+                #('choose_seed_type', _('Create a new seed')),
+                ('create_standard_seed', _('Create a new seed')),
                 ('restore_from_seed', _('I already have a seed')),
                 ('restore_from_key', _('Use public or private keys')),
             ]
@@ -148,8 +149,8 @@ class BaseWizard(object):
 
     def import_addresses_or_keys(self):
         v = lambda x: keystore.is_address_list(x) or keystore.is_private_key_list(x)
-        title = _("Import Bitcoin Addresses")
-        message = _("Enter a list of Bitcoin addresses (this will create a watching-only wallet), or a list of private keys.")
+        title = _("Import Unitus Addresses")
+        message = _("Enter a list of Unitus addresses (this will create a watching-only wallet), or a list of private keys.")
         self.add_xpub_dialog(title=title, message=message, run_next=self.on_import,
                              is_valid=v, allow_multi=True)
 
@@ -271,8 +272,8 @@ class BaseWizard(object):
         ])
         presets = (
             ('legacy BIP44', bip44_derivation(0, bip43_purpose=44)),
-            ('p2sh-segwit BIP49', bip44_derivation(0, bip43_purpose=49)),
-            ('native-segwit BIP84', bip44_derivation(0, bip43_purpose=84)),
+            #('p2sh-segwit BIP49', bip44_derivation(0, bip43_purpose=49)),
+            #('native-segwit BIP84', bip44_derivation(0, bip43_purpose=84)),
         )
         while True:
             try:
@@ -473,11 +474,11 @@ class BaseWizard(object):
         ])
         choices = [
             ('create_standard_seed', _('Standard')),
-            ('create_segwit_seed', _('Segwit')),
+            #('create_segwit_seed', _('Segwit')),
         ]
         self.choice_dialog(title=title, message=message, choices=choices, run_next=self.run)
 
-    def create_segwit_seed(self): self.create_seed('segwit')
+    #def create_segwit_seed(self): self.create_seed('segwit')
     def create_standard_seed(self): self.create_seed('standard')
 
     def create_seed(self, seed_type):
@@ -516,5 +517,5 @@ class BaseWizard(object):
             self.wallet.synchronize()
             self.wallet.storage.write()
             self.terminate()
-        msg = _("Electrum is generating your addresses, please wait.")
+        msg = _("Electrum-UIS is generating your addresses, please wait.")
         self.waiting_dialog(task, msg)
